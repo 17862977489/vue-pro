@@ -1,28 +1,19 @@
 <template>
   <div>
   	<header class="header">
-  	  <div class="back">返回</div>
+  	  <div class="back iconfont">&#xe648;</div>
   	  <div class="search"></div>
   	  <div class="city">城市</div>
   	</header>
 	<swiper :options="swiperOption" ref="mySwiper">
-	    <swiper-slide>
+	    <swiper-slide v-for="item in swiperInfo" :key="item.id">
 	 	  <div class="swiper-img-con">
-	      	<img class="swiper-img" src="http://img1.qunarzz.com/piao/fusion/1712/d0/0f5f1844045c0102.jpg_890x330_68cb5860.jpg" alt="">
-	      </div>
-	    </swiper-slide>
-	    <swiper-slide>
-	      <div class="swiper-img-con">
-	      	<img class="swiper-img" src="http://img1.qunarzz.com/piao/fusion/1509/c2/d16a5b571393f.jpg_890x330_67726286.jpg" alt="">
-	      </div>
-	    </swiper-slide>
-	    <swiper-slide>
-	   	  <div class="swiper-img-con">
-	        <img class="swiper-img" src="http://img1.qunarzz.com/piao/fusion/1711/29/c375ab9551879402.jpg_890x330_ec2942d6.jpg" alt="">
+	      	<img class="swiper-img" :src="item.imgUrl" alt="">
 	      </div>
 	    </swiper-slide>
 	    <div class="swiper-pagination"  slot="pagination"></div>
   	</swiper>
+  	<div>12131321</div>
   </div>
 </template>
 
@@ -31,11 +22,28 @@
     name: 'Index',
     data () {
       return {
+        swiperInfo: [],
         swiperOption: {
           autoplay: 2000,
           direction: 'horizontal',
-          loop: true
+          loop: true,
+          pagination: '.swiper-pagination'
         }
+      }
+    },
+
+    created () {
+      this.getIndexData()
+    },
+
+    methods: {
+
+      getIndexData () {
+        this.$http.get('/static/index.json').then(this.handleGetDataSucc.bind(this))
+      },
+
+      handleGetDataSucc (res) {
+        this.swiperInfo = res.body.data.swiper
       }
     }
   }
@@ -50,6 +58,8 @@
   .back{
 	width: .64rem;
 	line-height: .86rem;
+	text-align: center;
+	font-size: .38rem;
   }
   .search{
 	flex:1;
@@ -63,7 +73,10 @@
 	text-align:center;
   }
   .swiper-img-con{
+    overflow: hidden;
     width: 100%;
+    height: 0;
+    padding-bottom: 31.25%;
   }
   .swiper-img{
   	width: 100%;
